@@ -30,7 +30,7 @@ export class UploadComponent implements OnInit {
 
   onSubmit() {
     const formData = new FormData();
-    formData.append('file', this.form.get('avatar').value);
+    formData.append('file', this.form.get('file').value);
 
     this.uploadService.upload(formData).subscribe(
       (res) => this.uploadResponse = res,
