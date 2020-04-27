@@ -145,6 +145,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "scorm-upload"
+    }
+  },
+  "defaultProject": "scorm-upload",
+  "cli": {
+    "analytics": "f7048193-b63d-4630-ae0d-e4cc222411f0"
+  }
 }
