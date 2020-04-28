@@ -3,6 +3,8 @@ const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const { Pool } = require('pg')
+const dotenv = require('dotenv')
 
 const server = express()
 
@@ -23,16 +25,35 @@ var storage = multer.diskStorage({
   }
 })
    
-var upload = multer({ storage: storage })
+var upload = multer({storage: storage})
 
-server.post('/upload-file', upload.single('file'), (req, res, next) => {
-  const file = req.file
-  
-  if (!file) {
+dotenv.config({path: './elephantsql.env'})
+
+const pe = process.env
+const pool = new Pool({
+  user: pe.PGUSER,
+  host: pe.PGHOST,
+  database: pe.PGDATABASE,
+  password: pe.PGPASSWORD,
+  port: pe.PGPORT,
+})
+
+const insertScorm = (req) => {
+  var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'))
+  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, file_path) VALUES ($1, $2, $3);"
+  var insertValues = [req.body.tutor, new Date(), newRepo + '/index.htm']
+  pool.query(insertQuery, insertValues, (err, result) => {
+    if (err) {console.log(err.stack)}
+  })
+}
+
+server.post('/upload-file', upload.single('file'), (req, res) => {
+  if (!req.file) {
     console.log("No file received");
   }
   else {
-    console.log('file received');
+    console.log("File received")
+    insertScorm(req);
   }
 })
 

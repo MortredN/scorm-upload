@@ -47,3 +47,6 @@ Thumbs.db
 
 # Ignore "uploads" folder
 /uploads
+
+# Ignore .env files
+*.env
