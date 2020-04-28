@@ -17,7 +17,7 @@ export class UploadComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      file: ['']
+      tutor: '', file: ['']
     });
   }
 
@@ -30,6 +30,10 @@ export class UploadComponent implements OnInit {
 
   onSubmit() {
     const formData = new FormData();
+
+    this.form.get('tutor').setValue((document.getElementsByName('tutor')[0] as HTMLInputElement).value);
+    
+    formData.append('tutor', this.form.get('tutor').value)
     formData.append('file', this.form.get('file').value);
 
     this.uploadService.upload(formData).subscribe(

@@ -10,6 +10,7 @@
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="text" name="tutor" placeholder="Tutor Name"/>
     <input type="file" name="file" (change)="onFileChange($event)" />
     <button type="submit">Upload</button>
   </form>

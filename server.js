@@ -27,6 +27,7 @@ var upload = multer({ storage: storage })
 
 server.post('/upload-file', upload.single('file'), (req, res, next) => {
   const file = req.file
+  
   if (!file) {
     console.log("No file received");
   }
