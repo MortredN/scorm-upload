@@ -9,6 +9,7 @@ import { ListComponent } from './list/list.component';
 import { UploadComponent } from './upload/upload.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UploadService } from './upload/upload.service';
+import { ListService } from './list/list.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { UploadService } from './upload/upload.service';
     ReactiveFormsModule
   ],
   providers: [
-    UploadService
+    UploadService,
+    ListService
   ],
   bootstrap: [AppComponent]
 })

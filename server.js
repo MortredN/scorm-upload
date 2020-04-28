@@ -41,8 +41,8 @@ const pool = new Pool({
 
 const insertScorm = (req) => {
   var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'))
-  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, file_path) VALUES ($1, $2, $3);"
-  var insertValues = [req.body.tutor, new Date(), `${newRepo}/index.htm`]
+  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name) VALUES ($1, $2, $3, $4);"
+  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_')]
   pool.query(insertQuery, insertValues, (err, result) => {
     if (err) {console.log(err.stack)}
   })
@@ -55,20 +55,31 @@ const unzip = (fileName) => {
 
 server.post('/upload-file', upload.single('file'), (req, res) => {
   if (!req.file) {
-    console.log("No file received");
+    console.log("No file received")
   }
   else {
     console.log("File received")
-    insertScorm(req);
-    unzip(req.file.originalname);
+    insertScorm(req)
+    unzip(req.file.originalname)
   }
 })
 
-server.use(express.static(__dirname + '/dist/scorm-upload'));
+server.get('/get/scorms', (req, res) => {
+  pool.query("SELECT * FROM scorms", (err, poolRes) => {
+    res.json(poolRes.rows)
+  })
+})
 
-server.get('/*', (req, res) => {   
-  res.sendFile(path.join(__dirname +'/dist/scorm-upload/index.html'));
+server.use(express.static(`${__dirname}/dist/scorm-upload`))
+server.get(/^(?:(?!play-scorm).)*$\r?\n?/, (req, res) => {
+  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`))
 });
+
+server.get("/play-scorm/:repo_url_name/:repo_name", (req, res) => {
+  var spacedRepoName = req.params.repo_name.replace('%20',' ');
+  server.use(`/play-scorm/${req.params.repo_url_name}`, express.static(`${__dirname}/uploads/${spacedRepoName}`))
+  res.sendFile(path.join(`${__dirname}/uploads/${spacedRepoName}/index.htm`))
+})
 
 server.listen(3000, () => {
   console.log('Server started!')
