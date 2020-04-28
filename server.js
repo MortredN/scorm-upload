@@ -6,6 +6,7 @@ const multer = require('multer')
 const { Pool } = require('pg')
 const dotenv = require('dotenv')
 const AdmZip = require('adm-zip')
+const fs = require('fs')
 
 const server = express()
 
@@ -51,6 +52,7 @@ const insertScorm = (req) => {
 const unzip = (fileName) => {
   var zip = new AdmZip(`./uploads/${fileName}`)
   zip.extractAllTo('./uploads', true)
+  fs.unlink('./uploads/' + fileName, (err) => {if (err) throw err})
 }
 
 server.post('/upload-file', upload.single('file'), (req, res) => {
