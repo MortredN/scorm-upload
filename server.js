@@ -15,6 +15,8 @@ var corsOptions = {
   optionsSuccessStatus: 200,
 }
 
+let user_id = '';
+
 server.use(cors(corsOptions))
 server.use(bodyParser.urlencoded({extended: true}))
 
@@ -42,11 +44,16 @@ const pool = new Pool({
 
 const insertScorm = (req) => {
   var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'))
-  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name) VALUES ($1, $2, $3, $4);"
-  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_')]
-  pool.query(insertQuery, insertValues, (err, result) => {
-    if (err) {console.log(err.stack)}
-  })
+  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4, $5);"
+  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_'), user_id]
+  if (user_id != '') {
+    pool.query(insertQuery, insertValues, (err, result) => {
+      if (err) {console.log(err.stack)}
+    })
+  }
+  else {
+    console.log('No user ID found');
+  }
 }
 
 const unzip = (fileName) => {
@@ -67,22 +74,35 @@ server.post('/upload-file', upload.single('file'), (req, res) => {
 })
 
 server.get('/get/scorms', (req, res) => {
-  pool.query("SELECT * FROM scorms", (err, poolRes) => {
+  const query = {
+    text: "SELECT * FROM scorms WHERE user_id = $1::text",
+    values: [user_id]
+  }  
+  pool.query(query, (err, poolRes) => {
     res.json(poolRes.rows)
   })
 })
 
 server.use(express.static(`${__dirname}/dist/scorm-upload`))
+
+server.post('/run', (req, res) => {
+  user_id = req.body.user_id;
+  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`))
+});
+
 server.get(/^(?:(?!play-scorm).)*$\r?\n?/, (req, res) => {
   res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`))
 });
 
 server.get("/play-scorm/:repo_url_name/:repo_name", (req, res) => {
-  var spacedRepoName = req.params.repo_name.replace('%20',' ');
-  server.use(`/play-scorm/${req.params.repo_url_name}`, express.static(`${__dirname}/uploads/${spacedRepoName}`))
-  res.sendFile(path.join(`${__dirname}/uploads/${spacedRepoName}/index.htm`))
+  if(user_id != '') {
+    var spacedRepoName = req.params.repo_name.replace('%20',' ');
+    server.use(`/play-scorm/${req.params.repo_url_name}`, express.static(`${__dirname}/uploads/${spacedRepoName}`))
+    res.sendFile(path.join(`${__dirname}/uploads/${spacedRepoName}/index.htm`))
+  }
 })
 
 server.listen(3000, () => {
   console.log('Server started!')
+  // package.json startup options need changes
 })

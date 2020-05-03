@@ -1,9 +1,2 @@
-<img *ngIf="loggedIn" src="{{ user.photoUrl }}">
-<div *ngIf="loggedIn">
-  <h4>{{ user.name }}</h4>
-  <p>{{ user.email }}</p>
-</div>
-<button (click)="signOut()" *ngIf="loggedIn">Sign Out</button>
-
 <a [routerLink]="['/']">Home (List)</a>
 <a [routerLink]="['/upload']">Upload Files</a>

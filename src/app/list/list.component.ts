@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
   constructor(private listService: ListService) { }
 
   ngOnInit(): void {
-    this.listService.getScorms().subscribe(res => {this.scorms = res; console.log(res, this.scorms)})
+    this.listService.getScorms().subscribe(res => {this.scorms = res})
   }
 
   pathClick(repoName, repoUrlName): void {
