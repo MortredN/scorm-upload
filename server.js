@@ -40,10 +40,30 @@ const pool = new Pool({
   port: pe.PGPORT,
 });
 
+const deleteSameScorms = (repoName, userId) => {
+  var deleteQuery = "DELETE FROM scorms WHERE (repo_name = $1 OR repo_url_name = $2) AND (user_id = $3);";
+  var deleteValues = [repoName, repoName.replace(/\s+/g, '_'), userId];
+  
+  if (userId != '')
+  {
+    pool.query(deleteQuery, deleteValues, (err, result) => {
+      if (err) {console.log(err.stack)}
+    })
+  }
+  else
+  {
+    console.log('No user ID found - DELETE');
+  }
+}
+
 const insertScorm = (req) => {
   var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'));
+
+  deleteSameScorms(newRepo, req.body.userId);
+
   var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4, $5);";
   var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_'), req.body.userId];
+
   if (req.body.userId != '')
   {
     pool.query(insertQuery, insertValues, (err, result) => {
@@ -52,7 +72,7 @@ const insertScorm = (req) => {
   }
   else
   {
-    console.log('No user ID found');
+    console.log('No user ID found - INSERT');
   }
 }
 
