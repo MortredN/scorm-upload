@@ -2,7 +2,10 @@
 <a class="enabled-a" (click)="navToUpload()">Upload Files</a>
 
 <h1>List</h1>
-<table>
+
+<input type="text" id="scormSearchInput" (keyup)="scormSearch()" placeholder="Tìm tên SCORM - Search by SCORM Name...">
+
+<table id="scormList">
     <tr>
         <th>SCORM Folder Name</th>
         <th>Uploaded Time</th>

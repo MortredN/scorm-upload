@@ -46,4 +46,24 @@ export class ListComponent implements OnInit {
     this.router.navigate(['/upload']);
   }
 
+  scormSearch(): void {
+    const input = document.getElementById("scormSearchInput") as HTMLInputElement;
+    var filter, table, tr, td, txtValue;
+    filter = input.value.toUpperCase();
+    table = document.getElementById("scormList");
+    tr = table.getElementsByTagName("tr");
+
+    for (let i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
 }
