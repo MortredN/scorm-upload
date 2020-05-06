@@ -1,0 +1,75 @@
+#selected-file {
+    margin-top: 50px;
+    font-weight: 500;
+}
+
+#progress {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+form {
+    margin: 10px auto;
+    width: 250px;
+}
+
+#file-upload {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+    margin: 0 auto;
+    border: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    background-color: #E5E5E5;
+    color: #31425C;
+    cursor: pointer;
+    background-image: url('/assets/img/icons/upload-30px.png');
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: 24px 8px;
+    transition: background-color 0.25s ease-in-out;
+
+    p {
+        margin: 10px 10px 10px 40px;
+    }
+}
+
+.custom-file-upload:hover {
+    background-color: #D1D1D1;
+}
+
+.custom-file-upload:active {
+    background-color: #BDBDBD;
+}
+
+.btn-submit {
+    width: calc(100% - 100px);
+    height: 36px;
+    font-size: 16px;
+    border-radius: 10px;
+    margin: 50px auto 0;
+    border: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    background-color: #31425C;
+    color: #E5E5E5;
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
+}
+
+.btn-submit:hover {
+    background-color: #27354A;
+}
+
+.btn-submit:active {
+    background-color: #18212E;
+}

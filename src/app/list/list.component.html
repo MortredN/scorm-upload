@@ -1,18 +1,26 @@
-<a class="disabled-a">List</a>
-<a class="enabled-a" (click)="navToUpload()">Upload Files</a>
+<div class="nav">
+    <button class="nav-btn nav-btn-disabled">Danh sách SCORM<br>SCORM List</button>
+    <button class="nav-btn nav-btn-enabled" (click)="navToUpload()">Tải SCORM lên<br>Upload SCORM</button>
+</div>
 
-<h1>List</h1>
+<h1>Danh sách SCORM - SCORM List</h1>
 
-<input type="text" id="scormSearchInput" (keyup)="scormSearch()" placeholder="Tìm tên SCORM - Search by SCORM Name...">
+<input type="text" id="scormSearchInput" class="searchInput" (keyup)="scormSearch()" placeholder="Tìm tên SCORM - Search by SCORM Name...">
 
 <table id="scormList">
+    <colgroup>
+        <col class="col-scorm">
+        <col class="col-time">
+        <col class="col-btn">
+    </colgroup>
     <tr>
         <th>SCORM Folder Name</th>
         <th>Uploaded Time</th>
+        <th></th>
     </tr>
     <tr *ngFor="let scorm of scorms">
         <td>{{scorm.repo_name}}</td>
-        <td>{{scorm.upload_time}}</td>
-        <td><button (click)="playScorm(scorm.repo_name, scorm.repo_url_name, scorm.user_id)">Embed</button></td>
+        <td>{{scorm.upload_time | date: 'dd-MM-yyyy HH:mm:ss'}}</td>
+        <td><button class="btn-link" (click)="playScorm(scorm.repo_name, scorm.repo_url_name, scorm.user_id)">Get Link</button></td>
     </tr>
 </table>

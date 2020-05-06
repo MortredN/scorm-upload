@@ -11,7 +11,7 @@
     <lticm:property name="tool_id">scorm_vins</lticm:property>
     <lticm:property name="privacy_level">anonymous</lticm:property>
     <lticm:property name="selection_width">1000</lticm:property>
-    <lticm:property name="selection_height">570</lticm:property>
+    <lticm:property name="selection_height">650</lticm:property>
     <lticm:options name="resource_selection">
       <lticm:property name="enabled">true</lticm:property>
     </lticm:options>

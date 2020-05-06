@@ -3,4 +3,57 @@
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    background-color: #7CA5CB;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.nav {
+    margin-top: 36px;
+    text-align: center;
+}
+
+.nav-btn {
+    width: 210px;
+    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+    margin: 0 30px;
+    border: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+}
+
+.nav-btn-enabled {
+    font-weight: 600;
+    background-color: #31425C;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
+}
+
+.nav-btn-enabled:hover {
+    background-color: #29374D;
+}
+
+.nav-btn-enabled:active {
+    background-color: #18212E;
+}
+
+.nav-btn-disabled {
+    font-weight: 500;
+    background-color: #626A71;
+    color: #D0D0D0;
+    cursor: not-allowed;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 32px 0;
+}
+
+p {
+    font-size: 16px;
 }

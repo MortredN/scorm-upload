@@ -40,30 +40,57 @@ export class UploadComponent implements OnInit {
     {
       const file = event.target.files[0];
       this.form.get('file').setValue(file);
+      document.getElementById('selected-file').innerText = event.target.files[0].name;
     }
   }
 
   onSubmit() {
     if(this.form.get('file').value != [''])
     {
-      const formData = new FormData();
-      
-      formData.append('userId', this.form.get('userId').value);
-      formData.append('file', this.form.get('file').value);
+      if(document.getElementById('selected-file').innerText.includes('.zip'))
+      {
+        Swal.fire({
+          title: 'Tải file lên? - Upload the file?',
+          html: "Xin hãy kiểm tra lại file ZIP đã theo chuẩn SCORM!<br>(Please make sure your ZIP file follows SCORM standard!)",
+          icon: 'warning',
+          focusCancel: true,
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Upload!',
+        })
+        .then((result) => {
+          if (result.value) {
+            const formData = new FormData();
+        
+            formData.append('userId', this.form.get('userId').value);
+            formData.append('file', this.form.get('file').value);
 
-      this.uploadService.upload(formData).subscribe(
-        (res) => this.uploadResponse = res,
-        (err) => this.error = err
-      );
+            this.uploadService.upload(formData).subscribe(
+              (res) => this.uploadResponse = res,
+              (err) => this.error = err
+            );
+          }
+        });
+      }
+      else
+      {
+        Swal.fire({
+          title: 'Không phải file ZIP! - Not a ZIP file!',
+          html: 'Xin hãy chọn file ZIP trong thiết bị của bạn...<br>(Please select a ZIP file from your device...)',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
     }
     else
     {
       Swal.fire({
         title: 'Chưa có file! - No file!',
-        html: 'Xin hãy chọn file zip trong thiết bị của bạn...<br>Please select a zip file from your device...',
+        html: 'Xin hãy chọn file ZIP trong thiết bị của bạn...<br>(Please select a ZIP file from your device...)',
         icon: 'error',
         confirmButtonText: 'OK'
-      })
+      });
     }
   }
 
