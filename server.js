@@ -61,8 +61,8 @@ const insertScorm = (req) => {
 
   deleteSameScorms(newRepo, req.body.userId);
 
-  var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4, $5);";
-  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_'), req.body.userId];
+  var insertQuery = "INSERT INTO scorms (upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4);";
+  var insertValues = [new Date(), newRepo, newRepo.replace(/\s+/g, '_'), req.body.userId];
 
   if (req.body.userId != '')
   {
