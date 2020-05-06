@@ -29,7 +29,7 @@ export class UploadComponent implements OnInit {
       this.userId = userId;
 
       this.form = this.formBuilder.group({
-        tutor: '', file: ['']
+        userId: this.userId, tutor: '', file: ['']
       });
     })
   }
@@ -46,7 +46,8 @@ export class UploadComponent implements OnInit {
 
     this.form.get('tutor').setValue((document.getElementsByName('tutor')[0] as HTMLInputElement).value);
     
-    formData.append('tutor', this.form.get('tutor').value)
+    formData.append('userId', this.form.get('userId').value);
+    formData.append('tutor', this.form.get('tutor').value);
     formData.append('file', this.form.get('file').value);
 
     this.uploadService.upload(formData).subscribe(

@@ -45,21 +45,27 @@ const pool = new Pool({
 const insertScorm = (req) => {
   var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'))
   var insertQuery = "INSERT INTO scorms (tutor_name, upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4, $5);"
-  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_'), user_id]
-  if (user_id != '') {
+  var insertValues = [req.body.tutor, new Date(), newRepo, newRepo.replace(/\s+/g, '_'), req.body.userId]
+  if (req.body.userId != '')
+  {
     pool.query(insertQuery, insertValues, (err, result) => {
       if (err) {console.log(err.stack)}
     })
   }
-  else {
+  else
+  {
     console.log('No user ID found');
   }
 }
 
-const unzip = (fileName) => {
-  var zip = new AdmZip(`./uploads/${fileName}`)
-  zip.extractAllTo('./uploads', true)
-  fs.unlink('./uploads/' + fileName, (err) => {if (err) throw err})
+const moveAndUnzip = (fileName, userId) => {
+  if(fs.existsSync(`./uploads/${userId}`))
+  {
+    fs.mkdirSync(`./uploads/${userId}`, {recursive: true}, (err) => {if (err) throw err})
+  }
+  var zip = new AdmZip(`./uploads/${userId}/${fileName}`)
+  zip.extractAllTo(`./uploads/${userId}`, true)
+  fs.unlink(`./uploads/${userId}/${fileName}`, (err) => {if (err) throw err})
 }
 
 server.route('/scorms')
@@ -73,13 +79,15 @@ server.route('/scorms')
     })
   })
   .post(upload.single('file'), (req, res) => {
-    if (!req.file) {
+    if (!req.file)
+    {
       console.log("No file received")
     }
-    else {
+    else
+    {
       console.log("File received")
       insertScorm(req)
-      unzip(req.file.originalname)
+      moveAndUnzip(req.file.originalname, req.body.userId)
     }
   })
 
