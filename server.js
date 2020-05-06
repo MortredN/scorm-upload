@@ -66,7 +66,7 @@ const unzipToUserFolder = (fileName, userId) => {
   fs.unlink(`./uploads/${fileName}`, (err) => {if (err) throw err});
 }
 
-server.get('scorms/:user_id', (req, res) => {
+server.get('/scorms/:user_id', (req, res) => {
   const query = {
     text: "SELECT * FROM scorms WHERE user_id = $1::text",
     values: [req.params.user_id]
@@ -76,7 +76,7 @@ server.get('scorms/:user_id', (req, res) => {
   })
 })
 
-server.post('scorm', upload.single('file'), (req, res) => {
+server.post('/scorm', upload.single('file'), (req, res) => {
   if (!req.file)
   {
     console.log("No file received");
@@ -91,12 +91,12 @@ server.post('scorm', upload.single('file'), (req, res) => {
 
 server.use(express.static(`${__dirname}/dist/scorm-upload`))
 
-server.post('/run', (req, res) => {
-  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/list/${req.body.user_id}`));
+server.get(/^(?:(?!(scorm)).)*$\r?\n?/, (req, res) => {
+  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`));
 });
 
-server.get(/^(?:(?!play-scorm).)*$\r?\n?/, (req, res) => {
-  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`));
+server.post('/run', (req, res) => {
+  res.redirect(`http://localhost:3000/list/${req.body.user_id}`);
 });
 
 server.get("/play-scorm/:user_id/:repo_url_name/:repo_name", (req, res) => {
