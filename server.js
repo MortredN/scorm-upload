@@ -62,32 +62,31 @@ const unzip = (fileName) => {
   fs.unlink('./uploads/' + fileName, (err) => {if (err) throw err})
 }
 
-server.post('/upload-file', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    console.log("No file received")
-  }
-  else {
-    console.log("File received")
-    insertScorm(req)
-    unzip(req.file.originalname)
-  }
-})
-
-server.get('/get/scorms', (req, res) => {
-  const query = {
-    text: "SELECT * FROM scorms WHERE user_id = $1::text",
-    values: [user_id]
-  }  
-  pool.query(query, (err, poolRes) => {
-    res.json(poolRes.rows)
+server.route('/scorms')
+  .get((req, res) => {
+    const query = {
+      text: "SELECT * FROM scorms WHERE user_id = $1::text",
+      values: [user_id]
+    }  
+    pool.query(query, (err, poolRes) => {
+      res.json(poolRes.rows)
+    })
   })
-})
+  .post(upload.single('file'), (req, res) => {
+    if (!req.file) {
+      console.log("No file received")
+    }
+    else {
+      console.log("File received")
+      insertScorm(req)
+      unzip(req.file.originalname)
+    }
+  })
 
 server.use(express.static(`${__dirname}/dist/scorm-upload`))
 
 server.post('/run', (req, res) => {
-  user_id = req.body.user_id;
-  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/index.html`))
+  res.sendFile(path.join(`${__dirname}/dist/scorm-upload/list/${req.body.user_id}`))
 });
 
 server.get(/^(?:(?!play-scorm).)*$\r?\n?/, (req, res) => {
@@ -95,11 +94,9 @@ server.get(/^(?:(?!play-scorm).)*$\r?\n?/, (req, res) => {
 });
 
 server.get("/play-scorm/:repo_url_name/:repo_name", (req, res) => {
-  if(user_id != '') {
-    var spacedRepoName = req.params.repo_name.replace('%20',' ');
-    server.use(`/play-scorm/${req.params.repo_url_name}`, express.static(`${__dirname}/uploads/${spacedRepoName}`))
-    res.sendFile(path.join(`${__dirname}/uploads/${spacedRepoName}/index.htm`))
-  }
+  var spacedRepoName = req.params.repo_name.replace('%20', ' ')
+  server.use(`/play-scorm/${req.params.repo_url_name}`, express.static(`${__dirname}/uploads/${spacedRepoName}`))
+  res.sendFile(path.join(`${__dirname}/uploads/${spacedRepoName}/index.htm`))
 })
 
 server.listen(3000, () => {

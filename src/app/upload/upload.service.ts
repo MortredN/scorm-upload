@@ -11,7 +11,7 @@ export class UploadService {
   constructor(private httpClient: HttpClient) { }
 
   public upload(data) {
-    let uploadURL = `${this.SERVER_URL}/upload-file`;
+    let uploadURL = `${this.SERVER_URL}/scorms`;
 
     return this.httpClient.post<any>(uploadURL, data, {
       reportProgress: true,

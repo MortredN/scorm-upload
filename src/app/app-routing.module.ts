@@ -5,7 +5,7 @@ import { UploadComponent } from './upload/upload.component';
 
 
 const routes: Routes = [
-  { path: '', component: ListComponent },
+  { path: 'list/:user_id', component: ListComponent },
   { path: 'upload', component: UploadComponent }
 ];
 

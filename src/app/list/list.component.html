@@ -1,14 +1,13 @@
 <table>
     <tr>
-        <th>ID</th>
         <th>SCORM Folder Name</th>
         <th>Tutor Name</th>
         <th>Uploaded Time</th>
     </tr>
     <tr *ngFor="let scorm of scorms">
-        <td>{{scorm.scorm_id}}</td>
-        <td><a [routerLink]="" (click)="pathClick(scorm.repo_name, scorm.repo_url_name)">{{scorm.repo_name}}</a></td>
+        <td>{{scorm.repo_name}}</td>
         <td>{{scorm.tutor_name}}</td>
         <td>{{scorm.upload_time}}</td>
+        <td><button (click)="">Embed</button></td>
     </tr>
 </table>
