@@ -3,5 +3,6 @@ export class Scorm {
     tutor_name;
     upload_time;
     repo_name;
-    repo_url_name
+    repo_url_name;
+    user_id
 }

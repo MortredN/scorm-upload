@@ -11,6 +11,12 @@ export class ListService {
   constructor(private http: HttpClient) { }
 
   getScorms(userId): Observable<Scorm[]> {
-    return this.http.get<Scorm[]>(`http://localhost:3000/scorms/${userId}`)
+    return this.http.get<Scorm[]>(`http://localhost:3000/scorms/${userId}`);
+  }
+  
+  playScorm(repoName, repoUrlName, userId): void {
+    const getURL = `http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`;
+    this.http.get(getURL);
+    window.location.href = getURL;
   }
 }
