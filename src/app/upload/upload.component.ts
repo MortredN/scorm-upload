@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from  '@angular/forms';
 import { UploadService } from  './upload.service';
+import { UserIdService } from '../user-id.service';
 
 @Component({
   selector: 'app-upload',
@@ -9,16 +11,27 @@ import { UploadService } from  './upload.service';
 })
 export class UploadComponent implements OnInit {
 
+  userId: string
+
   form: FormGroup;
   error: string;
   uploadResponse = { status: '', message: '', filePath: '' };
 
-  constructor(private formBuilder: FormBuilder, private uploadService: UploadService) { }
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private uploadService: UploadService,
+    private userIdService: UserIdService
+  ) { }
 
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      tutor: '', file: ['']
-    });
+    this.userIdService.userIdObs.subscribe(userId => {
+      this.userId = userId;
+
+      this.form = this.formBuilder.group({
+        tutor: '', file: ['']
+      });
+    })
   }
 
   onFileChange(event) {
@@ -40,6 +53,10 @@ export class UploadComponent implements OnInit {
       (res) => this.uploadResponse = res,
       (err) => this.error = err
     );
+  }
+
+  navToList(): void {
+    this.router.navigate(['/list', this.userId]);
   }
 
 }

@@ -7,16 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListComponent } from './list/list.component';
 import { UploadComponent } from './upload/upload.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { UploadService } from './upload/upload.service';
 import { ListService } from './list/list.service';
+import { UserIdService } from './user-id.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListComponent,
-    UploadComponent,
-    NavbarComponent
+    UploadComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +29,8 @@ import { ListService } from './list/list.service';
   ],
   providers: [
     UploadService,
-    ListService
+    ListService,
+    UserIdService
   ],
   bootstrap: [AppComponent]
 })
