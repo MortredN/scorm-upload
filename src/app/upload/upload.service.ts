@@ -7,11 +7,10 @@ import { map } from  'rxjs/operators';
 })
 export class UploadService {
   
-  SERVER_URL: string = "http://localhost:3000";
   constructor(private httpClient: HttpClient) { }
 
   public upload(data) {
-    let uploadURL = `${this.SERVER_URL}/scorms`;
+    let uploadURL = `http://localhost:3000/scorm`;
 
     return this.httpClient.post<any>(uploadURL, data, {
       reportProgress: true,

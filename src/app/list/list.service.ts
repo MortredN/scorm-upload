@@ -10,7 +10,7 @@ export class ListService {
 
   constructor(private http: HttpClient) { }
 
-  getScorms(): Observable<Scorm[]> {
-    return this.http.get<Scorm[]>('http://localhost:3000/scorms')
+  getScorms(userId): Observable<Scorm[]> {
+    return this.http.get<Scorm[]>(`http://localhost:3000/scorms/${userId}`)
   }
 }

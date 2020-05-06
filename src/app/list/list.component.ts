@@ -28,10 +28,9 @@ export class ListComponent implements OnInit {
     this.routeSub = this.route.params.pipe(
       mergeMap(params => {
         this.userId = params['user_id'];
-        return this.listService.getScorms();
+        return this.listService.getScorms(this.userId);
       })
-    )
-    .subscribe(res => {this.scorms = res});
+    ).subscribe(res => {this.scorms = res});
   }
 
   ngOnDestroy(): void {
