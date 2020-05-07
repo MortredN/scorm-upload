@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListComponent } from './list/list.component';
 import { UploadComponent } from './upload/upload.component';
+import { LinkComponent } from './link/link.component';
 import { UploadService } from './upload/upload.service';
 import { ListService } from './list/list.service';
 import { UserIdService } from './user-id.service';
@@ -15,7 +16,8 @@ import { UserIdService } from './user-id.service';
   declarations: [
     AppComponent,
     ListComponent,
-    UploadComponent
+    UploadComponent,
+    LinkComponent
   ],
   imports: [
     BrowserModule,
