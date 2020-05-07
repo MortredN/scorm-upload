@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpErrorResponse, HttpEventType } from  '@angular/common/http';
 import { map } from  'rxjs/operators';
+import { Scorm } from '../list/scorm';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadService {
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private http: HttpClient) { }
+
+  public checkDuplicateObs(userId, repoName) {
+    let checkUrl = `http://localhost:3000/scorm/${userId}/${repoName}`
+    return this.http.get<Scorm[]>(checkUrl);
+  }
 
   public upload(data) {
     let uploadURL = `http://localhost:3000/scorm`;
 
-    return this.httpClient.post<any>(uploadURL, data, {
+    return this.http.post<any>(uploadURL, data, {
       reportProgress: true,
       observe: 'events'
     }).pipe(map((event) => {

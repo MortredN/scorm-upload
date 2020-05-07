@@ -86,6 +86,16 @@ const unzipToUserFolder = (fileName, userId) => {
   fs.unlink(`./uploads/${fileName}`, (err) => {if (err) throw err});
 }
 
+server.get('/scorm/:user_id/:repo_name', (req, res) => {
+  const query = {
+    text: "SELECT * FROM scorms WHERE user_id = $1::text and repo_name = $2::text",
+    values: [req.params.user_id, req.params.repo_name]
+  }
+  pool.query(query, (err, poolRes) => {
+    res.json(poolRes.rows);
+  });
+});
+
 server.get('/scorms/:user_id', (req, res) => {
   const query = {
     text: "SELECT * FROM scorms WHERE user_id = $1::text",
@@ -93,8 +103,8 @@ server.get('/scorms/:user_id', (req, res) => {
   }  
   pool.query(query, (err, poolRes) => {
     res.json(poolRes.rows);
-  })
-})
+  });
+});
 
 server.post('/scorm', upload.single('file'), (req, res) => {
   if (!req.file)
@@ -107,7 +117,7 @@ server.post('/scorm', upload.single('file'), (req, res) => {
     insertScorm(req);
     unzipToUserFolder(req.file.originalname, req.body.userId);
   }
-})
+});
 
 server.use(express.static(`${__dirname}/dist/scorm-upload`))
 

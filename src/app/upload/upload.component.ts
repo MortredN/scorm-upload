@@ -45,14 +45,16 @@ export class UploadComponent implements OnInit {
   }
 
   onSubmit() {
+    const fileName = document.getElementById('selected-file').innerText;
+
     if(this.form.get('file').value != [''])
     {
-      if(document.getElementById('selected-file').innerText.includes('.zip'))
+      if(fileName.includes('.zip'))
       {
         Swal.fire({
           title: 'Tải file lên? - Upload the file?',
           html: "Xin hãy kiểm tra lại file ZIP đã theo chuẩn SCORM!<br>(Please make sure your ZIP file follows SCORM standard!)",
-          icon: 'warning',
+          icon: 'question',
           focusCancel: true,
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -60,16 +62,34 @@ export class UploadComponent implements OnInit {
           confirmButtonText: 'Upload!',
         })
         .then((result) => {
-          if (result.value) {
-            const formData = new FormData();
-        
-            formData.append('userId', this.form.get('userId').value);
-            formData.append('file', this.form.get('file').value);
-
-            this.uploadService.upload(formData).subscribe(
-              (res) => this.uploadResponse = res,
-              (err) => this.error = err
-            );
+          if (result.value)
+          {
+            const repoName = fileName.substring(0, fileName.lastIndexOf('.'));
+            this.uploadService.checkDuplicateObs(this.userId, repoName).subscribe((queryArr) => {
+              if(queryArr.length != 0)
+              {
+                Swal.fire({
+                  title: 'File bị trùng tên! - File with the same name found!',
+                  html: "Bạn có muốn xóa file cũ và đăng file mới lên?<br>(Do you wish to overwrite your old file?)",
+                  icon: 'warning',
+                  focusCancel: true,
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Có! / Yes!',
+                })
+                .then((result) => {
+                  if(result.value)
+                  {
+                    this.uploadAfterSubmit();
+                  }
+                });
+              }
+              else
+              {
+                this.uploadAfterSubmit();
+              }
+            });
           }
         });
       }
@@ -92,6 +112,18 @@ export class UploadComponent implements OnInit {
         confirmButtonText: 'OK'
       });
     }
+  }
+
+  private uploadAfterSubmit() {
+    const formData = new FormData();
+        
+    formData.append('userId', this.form.get('userId').value);
+    formData.append('file', this.form.get('file').value);
+
+    this.uploadService.upload(formData).subscribe(
+      (res) => this.uploadResponse = res,
+      (err) => this.error = err
+    );
   }
 
   navToList(): void {
