@@ -21,6 +21,6 @@
     <tr *ngFor="let scorm of scorms">
         <td>{{scorm.repo_name}}</td>
         <td>{{scorm.upload_time | date: 'dd-MM-yyyy HH:mm:ss'}}</td>
-        <td><button class="btn-link" (click)="playScorm(scorm.repo_name, scorm.repo_url_name, scorm.user_id)">Get Link</button></td>
+        <td><button class="btn-link" (click)="linkScorm(scorm.repo_name, scorm.repo_url_name, scorm.user_id)">Get Link</button></td>
     </tr>
 </table>

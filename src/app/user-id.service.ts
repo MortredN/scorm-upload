@@ -14,5 +14,12 @@ export class UserIdService {
   passUserId(userId: string) {
     this.userIdSource.next(userId);
   }
+
+  // Passing SCORM URL
+  private scormURLSource = new BehaviorSubject<string>("");
+  scormURLObs = this.scormURLSource.asObservable();
+  passScormUrl(scormURL: string) {
+    this.scormURLSource.next(scormURL);
+  }
   
 }

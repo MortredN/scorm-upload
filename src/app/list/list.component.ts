@@ -37,8 +37,10 @@ export class ListComponent implements OnInit {
     this.routeSub.unsubscribe();
   }
 
-  playScorm(repoName, repoUrlName, userId): void {
-    this.listService.playScorm(repoName, repoUrlName, userId);
+  linkScorm(repoName, repoUrlName, userId): void {
+    this.userIdService.passScormUrl(`http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`);
+    this.userIdService.passUserId(this.userId);
+    this.router.navigate(['/link']);
   }
 
   navToUpload(): void {

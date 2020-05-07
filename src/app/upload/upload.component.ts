@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from  '@angular/forms';
+import Swal from 'sweetalert2';
 import { UploadService } from  './upload.service';
 import { UserIdService } from '../user-id.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-upload',
