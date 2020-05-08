@@ -88,7 +88,7 @@ const unzipToUserFolder = (fileName, userId) => {
 
 server.get('/scorm/:user_id/:repo_name', (req, res) => {
   const query = {
-    text: "SELECT * FROM scorms WHERE user_id = $1::text and repo_name = $2::text",
+    text: "SELECT * FROM scorms WHERE user_id = $1::text and repo_name = $2::text ORDER BY upload_time DESC",
     values: [req.params.user_id, req.params.repo_name]
   }
   pool.query(query, (err, poolRes) => {
