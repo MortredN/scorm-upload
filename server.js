@@ -126,16 +126,16 @@ server.get(/^(?:(?!(scorm)).)*$\r?\n?/, (req, res) => {
 });
 
 server.post('/run', (req, res) => {
-  res.redirect(`http://localhost:3000/list/${req.body.user_id}`);
+  res.redirect(`http://localhost:3000/list?user_id=${req.body.user_id}&ext_url=${req.body.launch_presentation_return_url}`);
 });
 
 server.get("/play-scorm/:user_id/:repo_url_name/:repo_name", (req, res) => {
-  var spacedRepoName = req.params.repo_name.replace('%20', ' ');
+  var decodedRepoName = req.params.repo_name.replace('%20', ' ');
   
   server.use(`/play-scorm/${req.params.user_id}/${req.params.repo_url_name}`,
-    express.static(`${__dirname}/uploads/${req.params.user_id}/${spacedRepoName}`));
+    express.static(`${__dirname}/uploads/${req.params.user_id}/${decodedRepoName}`));
 
-  res.sendFile(path.join(`${__dirname}/uploads/${req.params.user_id}/${spacedRepoName}/index.htm`));
+  res.sendFile(path.join(`${__dirname}/uploads/${req.params.user_id}/${decodedRepoName}/index.htm`));
 })
 
 server.listen(3000, () => {

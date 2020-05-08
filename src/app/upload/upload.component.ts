@@ -12,7 +12,8 @@ import { UserIdService } from '../user-id.service';
 })
 export class UploadComponent implements OnInit {
 
-  userId: string
+  userId: string;
+  extUrl: string;
 
   form: FormGroup;
   error: string;
@@ -127,7 +128,7 @@ export class UploadComponent implements OnInit {
   }
 
   navToList(): void {
-    this.router.navigate(['/list', this.userId]);
+    this.router.navigate([`/list?user_id=${this.userId}&ext_url=${this.extUrl}`]);
   }
 
 }

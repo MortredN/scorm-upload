@@ -15,6 +15,7 @@ export class ListComponent implements OnInit {
 
   private routeSub: Subscription;
   userId: string;
+  extUrl: string;
   scorms: Scorm[];
 
   constructor(
@@ -25,9 +26,10 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.routeSub = this.route.params.pipe(
-      mergeMap(params => {
-        this.userId = params['user_id'];
+    this.routeSub = this.route.queryParams.pipe(
+      mergeMap(queryParams => {
+        this.userId = queryParams['user_id'];
+        this.extUrl = queryParams['ext_url'];
         return this.listService.getScorms(this.userId);
       })
     ).subscribe(res => {this.scorms = res});
@@ -38,13 +40,16 @@ export class ListComponent implements OnInit {
   }
 
   linkScorm(repoName, repoUrlName, userId): void {
-    this.userIdService.passScormUrl(`http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`);
-    this.userIdService.passUserId(this.userId);
-    this.router.navigate(['/link']);
+    // this.userIdService.passScormUrl(`http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`);
+    // this.userIdService.passUserId(this.userId);
+    // this.router.navigate(['/link']);
+    const passedUrl = `http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`;
+    window.location.href = `${this.extUrl}?return_type=iframe&url=${encodeURIComponent(passedUrl)}`;
   }
 
   navToUpload(): void {
     this.userIdService.passUserId(this.userId);
+    this.userIdService.passExtUrl(this.extUrl);
     this.router.navigate(['/upload']);
   }
 

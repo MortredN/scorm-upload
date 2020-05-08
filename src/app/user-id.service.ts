@@ -15,6 +15,13 @@ export class UserIdService {
     this.userIdSource.next(userId);
   }
 
+  // Passing auto-insert LTI URL
+  private extUrlSource = new BehaviorSubject<string>("");
+  extUrlObs = this.extUrlSource.asObservable();
+  passExtUrl(extUrl: string) {
+    this.extUrlSource.next(extUrl);
+  }
+
   // Passing SCORM URL
   private scormURLSource = new BehaviorSubject<string>("");
   scormURLObs = this.scormURLSource.asObservable();
