@@ -98,7 +98,7 @@ server.get('/scorm/:user_id/:repo_name', (req, res) => {
 
 server.get('/scorms/:user_id', (req, res) => {
   const query = {
-    text: "SELECT * FROM scorms WHERE user_id = $1::text",
+    text: "SELECT * FROM scorms WHERE user_id = $1::text ORDER BY upload_time DESC",
     values: [req.params.user_id]
   }  
   pool.query(query, (err, poolRes) => {
