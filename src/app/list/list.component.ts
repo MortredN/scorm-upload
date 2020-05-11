@@ -39,12 +39,9 @@ export class ListComponent implements OnInit {
     this.routeSub.unsubscribe();
   }
 
-  linkScorm(repoName, repoUrlName, userId): void {
-    // this.userIdService.passScormUrl(`http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`);
-    // this.userIdService.passUserId(this.userId);
-    // this.router.navigate(['/link']);
+  embedScorm(repoName, repoUrlName, userId): void {
     const passedUrl = `http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`;
-    window.location.href = `${this.extUrl}?return_type=iframe&url=${encodeURIComponent(passedUrl)}`;
+    window.location.href = `${this.extUrl}?return_type=lti_launch_url&url=${encodeURIComponent(passedUrl)}&title=${repoName}`;
   }
 
   navToUpload(): void {
