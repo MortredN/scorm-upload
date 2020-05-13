@@ -77,10 +77,16 @@ const insertScorm = (req, repoName) => {
 }
 
 const unzipToUserFolder = (fileName, userId) => {
+  if(!fs.existsSync(`./uploads`))
+  {
+    fs.mkdirSync(`./uploads`, {recursive: true}, (err) => {if (err) throw err});
+  }
+
   if(!fs.existsSync(`./uploads/${userId}`))
   {
     fs.mkdirSync(`./uploads/${userId}`, {recursive: true}, (err) => {if (err) throw err});
   }
+
   const zip = new AdmZip(`./uploads/${fileName}`);
   const zipEntries = zip.getEntries();
 
