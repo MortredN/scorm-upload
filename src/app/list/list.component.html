@@ -19,7 +19,7 @@
         <th></th>
     </tr>
     <tr *ngFor="let scorm of scorms">
-        <td>{{scorm.repo_name}}</td>
+        <td>{{scorm.repo_url_name}}</td>
         <td>{{scorm.upload_time | date: 'dd-MM-yyyy HH:mm:ss'}}</td>
         <td><button class="btn-link" (click)="embedScorm(scorm.repo_name, scorm.repo_url_name, scorm.user_id)">Embed</button></td>
     </tr>

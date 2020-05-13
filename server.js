@@ -40,9 +40,9 @@ const pool = new Pool({
   port: pe.PGPORT,
 });
 
-const deleteSameScorms = (repoName, userId) => {
-  var deleteQuery = "DELETE FROM scorms WHERE (repo_name = $1 OR repo_url_name = $2) AND (user_id = $3);";
-  var deleteValues = [repoName, repoName.replace(/\s+/g, '_'), userId];
+const deleteSameScorms = (repoUrlName, userId) => {
+  var deleteQuery = "DELETE FROM scorms WHERE (repo_url_name = $1) AND (user_id = $2);";
+  var deleteValues = [repoUrlName, userId];
   
   if (userId != '')
   {
@@ -56,13 +56,13 @@ const deleteSameScorms = (repoName, userId) => {
   }
 }
 
-const insertScorm = (req) => {
+const insertScorm = (req, repoName) => {
   var newRepo = req.file.originalname.substring(0, req.file.originalname.lastIndexOf('.'));
 
-  deleteSameScorms(newRepo, req.body.userId);
+  deleteSameScorms(newRepo.replace(/\s+/g, '_'), req.body.userId);
 
   var insertQuery = "INSERT INTO scorms (upload_time, repo_name, repo_url_name, user_id) VALUES ($1, $2, $3, $4);";
-  var insertValues = [new Date(), newRepo, newRepo.replace(/\s+/g, '_'), req.body.userId];
+  var insertValues = [new Date(), repoName, newRepo.replace(/\s+/g, '_'), req.body.userId];
 
   if (req.body.userId != '')
   {
@@ -81,15 +81,21 @@ const unzipToUserFolder = (fileName, userId) => {
   {
     fs.mkdirSync(`./uploads/${userId}`, {recursive: true}, (err) => {if (err) throw err});
   }
-  var zip = new AdmZip(`./uploads/${fileName}`);
+  const zip = new AdmZip(`./uploads/${fileName}`);
+  const zipEntries = zip.getEntries();
+
+  const repoName = zipEntries[0].entryName.substring(0, zipEntries[0].entryName.indexOf('/'));
+
   zip.extractAllTo(`./uploads/${userId}`, true);
   fs.unlink(`./uploads/${fileName}`, (err) => {if (err) throw err});
+
+  return repoName;
 }
 
 server.get('/scorm/:user_id/:repo_name', (req, res) => {
   const query = {
-    text: "SELECT * FROM scorms WHERE user_id = $1::text and repo_name = $2::text",
-    values: [req.params.user_id, req.params.repo_name]
+    text: "SELECT * FROM scorms WHERE user_id = $1::text and repo_url_name = $2::text",
+    values: [req.params.user_id, req.params.repo_url_name]
   }
   pool.query(query, (err, poolRes) => {
     res.json(poolRes.rows);
@@ -114,8 +120,8 @@ server.post('/scorm', upload.single('file'), (req, res) => {
   else
   {
     console.log("File received");
-    insertScorm(req);
-    unzipToUserFolder(req.file.originalname, req.body.userId);
+    const repoName = unzipToUserFolder(req.file.originalname, req.body.userId);
+    insertScorm(req, repoName);
   }
 });
 

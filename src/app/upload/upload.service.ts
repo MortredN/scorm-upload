@@ -10,8 +10,8 @@ export class UploadService {
   
   constructor(private http: HttpClient) { }
 
-  public checkDuplicateObs(userId, repoName) {
-    let checkUrl = `http://localhost:3000/scorm/${userId}/${repoName}`
+  public checkDuplicateObs(userId, repoUrlName) {
+    let checkUrl = `http://localhost:3000/scorm/${userId}/${repoUrlName}`
     return this.http.get<Scorm[]>(checkUrl);
   }
 

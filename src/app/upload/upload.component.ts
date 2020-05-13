@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from  '@angular/forms';
+import { mergeMap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { UploadService } from  './upload.service';
 import { UserIdService } from '../user-id.service';
@@ -27,13 +28,17 @@ export class UploadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userIdService.userIdObs.subscribe(userId => {
-      this.userId = userId;
-
+    this.userIdService.userIdObs.pipe(
+      mergeMap((userId) => {
+        this.userId = userId;
+        return this.userIdService.extUrlObs;
+      })
+    ).subscribe((extUrl) => {
+      this.extUrl = extUrl;
       this.form = this.formBuilder.group({
         userId: this.userId, file: ['']
       });
-    })
+    });    
   }
 
   onFileChange(event) {
@@ -65,8 +70,8 @@ export class UploadComponent implements OnInit {
         .then((result) => {
           if (result.value)
           {
-            const repoName = fileName.substring(0, fileName.lastIndexOf('.'));
-            this.uploadService.checkDuplicateObs(this.userId, repoName).subscribe((queryArr) => {
+            const repoUrlName = fileName.substring(0, fileName.lastIndexOf('.')).replace(/\s+/g, '_');
+            this.uploadService.checkDuplicateObs(this.userId, repoUrlName).subscribe((queryArr) => {
               if(queryArr.length != 0)
               {
                 Swal.fire({
@@ -128,7 +133,7 @@ export class UploadComponent implements OnInit {
   }
 
   navToList(): void {
-    this.router.navigate([`/list?user_id=${this.userId}&ext_url=${this.extUrl}`]);
+    this.router.navigate(['/list'], {queryParams: {user_id: this.userId, ext_url: this.extUrl}});
   }
 
 }
