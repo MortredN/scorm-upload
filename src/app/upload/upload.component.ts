@@ -70,8 +70,8 @@ export class UploadComponent implements OnInit {
         .then((result) => {
           if (result.value)
           {
-            const repoUrlName = fileName.substring(0, fileName.lastIndexOf('.')).replace(/\s+/g, '_');
-            this.uploadService.checkDuplicateObs(this.userId, repoUrlName).subscribe((queryArr) => {
+            const repoName = fileName.substring(0, fileName.lastIndexOf('.'));
+            this.uploadService.checkDuplicateObs(this.userId, repoName).subscribe((queryArr) => {
               if(queryArr.length != 0)
               {
                 Swal.fire({
