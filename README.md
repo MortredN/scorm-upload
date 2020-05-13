@@ -83,7 +83,7 @@ Khi nhấp vào thanh `Tải SCORM lên`, sẽ có nút bấm `Upload` để ng�
 
 Khi nhấp vào thanh `Danh sách SCORM`, chọn một trong các bài giảng SCORM và dán bằng cách nhấp vào nút `Embed`. Canvas sẽ tự động điền URL và tên bài giảng vào thanh `External Tool`.
 
-
+___
 
 (English here)
 
