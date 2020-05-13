@@ -11,8 +11,8 @@
     <lticm:property name="tool_id">scorm_vins</lticm:property>
     <lticm:property name="domain">localhost</lticm:property>
     <lticm:property name="privacy_level">public</lticm:property>
-    <lticm:property name="selection_width">1000</lticm:property>
-    <lticm:property name="selection_height">650</lticm:property>
+    <lticm:property name="selection_width">1920</lticm:property>
+    <lticm:property name="selection_height">1080</lticm:property>
     <lticm:options name="resource_selection">
       <lticm:property name="enabled">true</lticm:property>
       <lticm:property name="url">http://localhost:3000/run</lticm:property>

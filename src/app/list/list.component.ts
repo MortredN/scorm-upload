@@ -41,7 +41,7 @@ export class ListComponent implements OnInit {
 
   embedScorm(repoName, repoUrlName, userId): void {
     const passedUrl = `http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`;
-    window.location.href = `${this.extUrl}?return_type=lti_launch_url&url=${encodeURIComponent(passedUrl)}&title=${repoName}`;
+    window.location.href = `${this.extUrl}?return_type=lti_launch_url&url=${encodeURIComponent(passedUrl)}&title=${repoUrlName}`;
   }
 
   navToUpload(): void {
