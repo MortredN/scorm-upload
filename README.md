@@ -1,27 +1,80 @@
-# ScormUpload
+# SCORM Vinschool (scorm-upload)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.3.
+This is a LTI developed using Angular and Express.js for teachers to upload and embed SCORM courses into [Infrastructure Canvas](https://canvas.instructure.com).
 
-## Development server
+## Server development
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### URL Changes
+Change all `localhost:3000` into your designated deploying URL:
 
-## Code scaffolding
+#### server.js
+```javascript
+server.post('/run', (req, res) => {
+  res.redirect(`http://localhost:3000/list?user_id=${req.body.user_id}&ext_url=${req.body.launch_presentation_return_url}`);
+});
+```
+into
+```javascript
+  res.redirect(`{{Your designated URL}}/list?user_id=${req.body.user_id}&ext_url=${req.body.launch_presentation_return_url}`);
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+#### src/app/list/list.component.ts
+```typescript
+embedScorm(repoName, repoUrlName, userId): void {
+  const passedUrl = `http://localhost:3000/play-scorm/${userId}/${repoUrlName}/${repoName}`;
+  window.location.href = `${this.extUrl}?return_type=lti_launch_url&url=${encodeURIComponent(passedUrl)}&title=${repoName}`;
+}
+```
+into
+```typescript
+  const passedUrl = `{{Your designated URL}}/play-scorm/${userId}/${repoUrlName}/${repoName}`;
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+#### src/app/list/list.service.ts
+```typescript
+getScorms(userId): Observable<Scorm[]> {
+  return this.http.get<Scorm[]>(`http://localhost:3000/scorms/${userId}`);
+}
+```
+into
+```typescript
+  return this.http.get<Scorm[]>(`{{Your designated URL}}/scorms/${userId}`);
+```
 
-## Running unit tests
+#### src/app/upload/upload.service.ts
+```typescript
+public checkDuplicateObs(userId, repoUrlName) {
+  let checkUrl = `http://localhost:3000/scorm/${userId}/${repoUrlName}`
+  return this.http.get<Scorm[]>(checkUrl);
+}
+```
+into
+```typescript
+  let checkUrl = `{{Your designated URL}}/scorm/${userId}/${repoUrlName}`
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+and
 
-## Running end-to-end tests
+```typescript
+public upload(data) {
+  let uploadURL = `http://localhost:3000/scorm`;
+```
+into
+```typescript
+  let uploadURL = `{{Your designated URL}}/scorm`;
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Build Angular project and deploy it with Express
 
-## Further help
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. `server.js` will handle the endpoints and serve files from `dist`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Instruction
+
+### Upload SCORM courses
+
+Navigate to `Upload SCORM` tab, select a uniquely-generated SCORM course (often in a `.zip` format) and upload it. If the root folder in the zip files already has the same name with an existed folder in `/uploads`, there will be an alert indicating if the user wants to overwrite the existed one with the new one.
+
+### Embed SCORM courses
+
+Navigate to `SCORM List` tab, select a SCORM course using the `Embed` button. Canvas will automatically insert the course's URL and title into the Canvas's `External Tool` tab.
